@@ -20,7 +20,14 @@ export interface IconProps extends LucideProps {
 
 function toChildArray(children: VNodeChild | undefined): any[] {
   if (children == null || typeof children === 'boolean') return [];
-  return Array.isArray(children) ? children.flat(Infinity) : [children];
+
+  // `VNodeChild` is a recursive union (`VNodeChild[]` is part of the union).
+  // Calling `.flat()` directly on that recursive array type can make tsc
+  // recurse forever while resolving the lib.es2020 `flat` overloads, hence the
+  // explicit `any[]` cast before flattening.
+  return Array.isArray(children)
+    ? (children as any[]).flat(Infinity)
+    : [children];
 }
 
 /**

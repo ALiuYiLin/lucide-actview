@@ -1,18 +1,20 @@
 import plugins from '@lucide/rollup-plugins';
 import pkg from './package.json' with { type: 'json' };
 
-const external = ['actview', /^@actview\/jsx(\/.*)?$/];
+const external = (id) =>
+  id === 'actview' || id === '@actview/jsx' || id.startsWith('@actview/jsx/');
 
 export default [
   {
     input: 'src/lucide-actview.ts',
-      plugins: plugins({
-        pkg,
-        esbuildOptions: {
-          jsx: 'automatic',
-          jsxImportSource: '@actview/jsx',
-        },
-      }),
+    plugins: plugins({
+      pkg,
+      esbuildOptions: {
+        tsconfig: false,
+        jsx: 'automatic',
+        jsxImportSource: '@actview/jsx',
+      },
+    }),
     external,
     output: {
       dir: 'dist/esm',
